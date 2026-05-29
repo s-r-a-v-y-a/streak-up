@@ -18,7 +18,7 @@ GitHub: https://github.com/s-r-a-v-y-a/streak-up
 
 Job searching is lonely, inconsistent, and hard to measure. 
 Most people apply for a few days then lose momentum. StreakUp 
-gamifies the process — turning 75 days of consistent effort 
+gamifies the process by turning 75 days of consistent effort 
 into something trackable, rewarding, and social.
 
 ---
