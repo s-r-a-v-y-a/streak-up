@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  careerTrack String
+  totalPoints Int @default(0)
+  currentStreak Int @default(0)
+  longestStreak Int @default(0)
+  isPublic Boolean @default(true)
+  createdAt DateTime @default(now())
+  tasks Task[]
+  dayLogs DayLog[]
+  badges Badge[]
+  groupMembers GroupMember[]
+  cheersSent Cheer[] @relation("CheerSender")
+  cheersReceived Cheer[] @relation("CheerReceiver")
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  userId Int
+  name String
+  description String?
+  dailyTarget Int
+  unit String
+  isActive Boolean @default(true)
+  user User @relation(fields: [userId], references: [id])
+  taskLogs TaskLog[]
+}
+
+model DayLog {
+  id Int @id @default(autoincrement())
+  userId Int
+  date DateTime
+  isPerfectDay Boolean @default(false)
+  pointsEarned Int @default(0)
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  taskLogs TaskLog[]
+}
+
+model TaskLog{
+  id     Int @id @default(autoincrement())
+  dayLogId Int
+  taskId   Int
+  actualValue Int
+  pointsEarned Int @default(0)
+  dayLog DayLog @relation(fields: [dayLogId], references: [id])
+  task Task @relation(fields: [taskId], references: [id])
+}
+
+model Badge {
+  id     Int @id @default(autoincrement())
+  userId Int
+  type String
+  earnedAt DateTime @default(now())
+  reward String?
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Group {
+  id Int @id @default(autoincrement())
+  name String
+  inviteCode String @unique
+  createdAt DateTime @default(now())
+  members GroupMember[]
+}
+
+model GroupMember {
+  id      Int @id @default(autoincrement())
+  groupId Int
+  userId  Int
+  group Group @relation(fields: [groupId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model Cheer{
+  id Int @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  message String?
+  createdAt DateTime @default(now())
+  sender   User @relation("CheerSender", fields: [senderId], references: [id])
+  receiver User @relation("CheerReceiver", fields: [receiverId], references: [id])
+}
